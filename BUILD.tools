@@ -1,0 +1,28 @@
+
+def make_lib(org, name, rev, lib_name=None, excludes=None, intransitive=False, jars=None, deps=None):
+    lib_name = lib_name or name
+    jar_dep = jar(org=org, name=name, rev=rev)
+    if intransitive:
+        jar_dep.intransitive()
+    jar_library(name=lib_name, jars=[jar_dep] + (jars or []), dependencies=deps or [])
+
+make_lib('com.martiansoftware', 'nailgun-server', '0.9.1')
+
+make_lib('com.typesafe.zinc', 'zinc', '0.3.5.3')
+jar_library(name='scala-compile-2.11.4',
+  dependencies=[
+    '3rdparty/jvm/org/scala-lang:scala-compiler'
+  ]
+)
+jar_library(name='scala-library-2.11.4',
+  dependencies=[
+    '3rdparty/jvm/org/scala-lang:scala-library'
+  ]
+)
+
+# ScalaRepl
+make_lib('org.scala-lang', 'scala-compiler', '2.11.4', lib_name='scala-repl-2.11.4',
+  jars=[
+    jar(org='org.scala-lang', name='jline', rev='2.11.4'),
+  ]
+)
